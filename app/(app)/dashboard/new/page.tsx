@@ -1,13 +1,17 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { HabitForm } from '@/components/habit-form'
+import { NewHabitClient } from './new-habit-client'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'New Habit',
 }
 
-export default async function NewHabitPage() {
+type NewHabitPageProps = {
+  searchParams: Promise<{ template?: string; [key: string]: string | undefined }>
+}
+
+export default async function NewHabitPage({ searchParams }: NewHabitPageProps) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -15,15 +19,19 @@ export default async function NewHabitPage() {
     redirect('/auth/login')
   }
 
-  return (
-    <div className="animate-fade-in">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">Create New Habit</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Build a new habit in 3 easy steps
-        </p>
-      </div>
-      <HabitForm userId={user.id} />
-    </div>
-  )
+  const params = await searchParams
+  const hasTemplate = params.template
+
+  // If template is selected via URL, pre-fill form with template data
+  const initialTemplate = hasTemplate ? {
+    title: params.title || '',
+    description: params.description || '',
+    category: params.category || 'general',
+    frequency: params.frequency || 'daily',
+    color: params.color || '#22c55e',
+    icon: params.icon || 'check',
+    target_days: params.target_days ? parseInt(params.target_days) : 7,
+  } : null
+
+  return <NewHabitClient userId={user.id} initialTemplate={initialTemplate} />
 }

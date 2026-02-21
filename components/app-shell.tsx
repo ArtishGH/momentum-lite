@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Plus, Settings, LogOut, Flame } from 'lucide-react'
+import { LayoutDashboard, Plus, Settings, LogOut, Flame, Archive } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -16,6 +16,7 @@ import {
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/dashboard/new', label: 'Add Habit', icon: Plus },
+  { href: '/dashboard/archived', label: 'Archived', icon: Archive },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 

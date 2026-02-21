@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useRef, type RefObject } from 'react'
-import { Check, MoreHorizontal, Pencil, Trash2, RotateCcw } from 'lucide-react'
+import { Check, MoreHorizontal, Pencil, Trash2, RotateCcw, FileText, Archive } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { getIcon } from '@/lib/icon-utils'
 import type { HabitWithCompletions } from '@/lib/types'
 import { Card, CardContent } from '@/components/ui/card'
 import {
@@ -21,6 +22,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { CompletionNotesDialog } from '@/components/completion-notes-dialog'
 
 type HabitCardProps = {
   habit: HabitWithCompletions
@@ -28,6 +30,8 @@ type HabitCardProps = {
   onToggle: (habitId: string) => void
   onEdit: (habitId: string) => void
   onDelete: (habitId: string) => void
+  onArchive?: (habitId: string) => void
+  onSaveNote?: (habitId: string, notes: string) => Promise<void>
 }
 
 // State type for the check animation
@@ -38,13 +42,20 @@ type CheckState = 'idle' | 'checking' | 'checked'
  * Interactive animations on check/uncheck with green intensity scaling.
  * Uses group class for hover effects, custom animation on toggle.
  */
-export function HabitCard({ habit, todayCompleted, onToggle, onEdit, onDelete }: HabitCardProps) {
+export function HabitCard({ habit, todayCompleted, onToggle, onEdit, onDelete, onArchive, onSaveNote }: HabitCardProps) {
   // Typed state and ref
   const [checkState, setCheckState] = useState<CheckState>(todayCompleted ? 'checked' : 'idle')
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [showNotesDialog, setShowNotesDialog] = useState(false)
   const cardRef: RefObject<HTMLDivElement | null> = useRef<HTMLDivElement>(null)
 
   const completionRate = habit.completionRate
+  const IconComponent = getIcon(habit.icon || 'check')
+  
+  // Get today's completion notes if any
+  const today = new Date().toISOString().split('T')[0]
+  const todayCompletion = habit.completions.find(c => c.completed_at === today)
+  const todayNotes = todayCompletion?.notes || null
 
   // Green intensity scales with completion rate (GitHub contribution style)
   const getGreenIntensity = (): string => {
@@ -73,6 +84,14 @@ export function HabitCard({ habit, todayCompleted, onToggle, onEdit, onDelete }:
         )}
       >
         <CardContent className="flex items-center gap-4 p-4">
+          {/* Habit Icon */}
+          <div 
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+            style={{ backgroundColor: `${habit.color}20`, color: habit.color }}
+          >
+            <IconComponent className="h-5 w-5" />
+          </div>
+
           {/* Check button with animation */}
           <button
             onClick={handleToggle}
@@ -107,6 +126,11 @@ export function HabitCard({ habit, todayCompleted, onToggle, onEdit, onDelete }:
                 {habit.description}
               </p>
             )}
+            {todayNotes && todayCompleted && (
+              <p className="mt-1 text-xs text-muted-foreground italic truncate">
+                &quot;{todayNotes}&quot;
+              </p>
+            )}
           </div>
 
           {/* Streak / completion indicator */}
@@ -137,11 +161,23 @@ export function HabitCard({ habit, todayCompleted, onToggle, onEdit, onDelete }:
                 <span className="sr-only">Actions for {habit.title}</span>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuContent align="end" className="w-48">
+              {onSaveNote && (
+                <DropdownMenuItem onClick={() => setShowNotesDialog(true)}>
+                  <FileText className="mr-2 h-4 w-4" />
+                  {todayNotes ? 'Edit Note' : 'Add Note'}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem onClick={() => onEdit(habit.id)}>
                 <Pencil className="mr-2 h-4 w-4" />
                 Edit
               </DropdownMenuItem>
+              {onArchive && (
+                <DropdownMenuItem onClick={() => onArchive(habit.id)}>
+                  <Archive className="mr-2 h-4 w-4" />
+                  {habit.is_archived ? 'Unarchive' : 'Archive'}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
                 onClick={() => setShowDeleteDialog(true)}
                 className="text-destructive focus:text-destructive"
@@ -174,6 +210,20 @@ export function HabitCard({ habit, todayCompleted, onToggle, onEdit, onDelete }:
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Completion Notes Dialog */}
+      {onSaveNote && (
+        <CompletionNotesDialog
+          habitTitle={habit.title}
+          existingNotes={todayNotes}
+          onSave={async (notes) => {
+            await onSaveNote(habit.id, notes)
+            setShowNotesDialog(false)
+          }}
+          open={showNotesDialog}
+          onOpenChange={setShowNotesDialog}
+        />
+      )}
     </>
   )
 }

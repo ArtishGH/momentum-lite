@@ -28,19 +28,20 @@ export const habitDetailsSchema = z.object({
     .number()
     .min(1, 'Target must be at least 1 day')
     .max(365, 'Target must be under 365 days'),
+  custom_days: z.array(z.number().min(0).max(6)).default([]),
   color: z.string().min(1, 'Please select a color'),
   icon: z.string().min(1, 'Please select an icon'),
 }).refine(
-  // Custom refine: if frequency is 'weekly', target must be multiple of 7
+  // Custom refine: if frequency is 'custom', must select at least one day
   (data) => {
-    if (data.frequency === 'weekly') {
-      return data.target_days % 7 === 0
+    if (data.frequency === 'custom') {
+      return Array.isArray(data.custom_days) && data.custom_days.length > 0
     }
     return true
   },
   {
-    message: 'For weekly habits, target days must be a multiple of 7',
-    path: ['target_days'],
+    message: 'Please select at least one day',
+    path: ['custom_days'],
   }
 )
 

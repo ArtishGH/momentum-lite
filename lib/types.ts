@@ -25,6 +25,7 @@ export type Habit = {
   target_days: number
   icon: string
   is_archived: boolean
+  custom_days: number[] | null // Array of day numbers (0=Sunday, 1=Monday, ..., 6=Saturday)
   created_at: string
   updated_at: string
 }
@@ -34,7 +35,7 @@ export type HabitCompletion = {
   habit_id: string
   user_id: string
   completed_at: string
-  note: string | null
+  notes: string | null // Matches database column name
   created_at: string
 }
 
@@ -51,7 +52,7 @@ export type HabitWithCompletions = Habit & {
 
 // --- Built-in generic types ---
 export type HabitInsert = Omit<Habit, 'id' | 'created_at' | 'updated_at'>
-export type HabitUpdate = Partial<Pick<Habit, 'title' | 'description' | 'category' | 'color' | 'frequency' | 'target_days' | 'icon' | 'is_archived'>>
+export type HabitUpdate = Partial<Pick<Habit, 'title' | 'description' | 'category' | 'color' | 'frequency' | 'target_days' | 'icon' | 'is_archived' | 'custom_days'>>
 export type ProfileUpdate = Partial<Pick<Profile, 'display_name' | 'bio' | 'theme'>>
 
 // Record type for chart data

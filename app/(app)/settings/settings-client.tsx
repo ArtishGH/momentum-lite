@@ -102,7 +102,7 @@ export function SettingsClient({ profile, userEmail, userId }: SettingsClientPro
                 id="email"
                 value={userEmail}
                 disabled
-                className="bg-muted text-muted-foreground"
+                className="bg-muted text-muted-foreground font-mono"
               />
             </div>
 
