@@ -1,7 +1,5 @@
-/**
- * Habit Templates - Pre-built habit templates for quick creation
- */
 import type { HabitCategory, HabitFrequency } from './types'
+export type { HabitCategory, HabitFrequency }
 
 export type HabitTemplate = {
   id: string

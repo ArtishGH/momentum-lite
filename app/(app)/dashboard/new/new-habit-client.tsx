@@ -13,15 +13,15 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import type { HabitTemplate } from '@/lib/habit-templates'
+import type { HabitTemplate, HabitCategory, HabitFrequency } from '@/lib/habit-templates'
 
 type NewHabitClientProps = {
   userId: string
   initialTemplate?: {
     title: string
     description: string
-    category: string
-    frequency: string
+    category: HabitCategory
+    frequency: HabitFrequency
     color: string
     icon: string
     target_days: number
@@ -37,8 +37,8 @@ export function NewHabitClient({ userId, initialTemplate }: NewHabitClientProps)
       id: 'custom',
       title: initialTemplate.title,
       description: initialTemplate.description,
-      category: initialTemplate.category as any,
-      frequency: initialTemplate.frequency as any,
+      category: initialTemplate.category,
+      frequency: initialTemplate.frequency,
       color: initialTemplate.color,
       icon: initialTemplate.icon,
       target_days: initialTemplate.target_days,

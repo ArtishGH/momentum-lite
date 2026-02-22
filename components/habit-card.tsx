@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, type RefObject } from 'react'
-import { Check, MoreHorizontal, Pencil, Trash2, RotateCcw, FileText, Archive } from 'lucide-react'
+import { Check, MoreHorizontal, Pencil, Trash2, RotateCcw, FileText, Archive, Flame } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getIcon } from '@/lib/icon-utils'
 import type { HabitWithCompletions } from '@/lib/types'
@@ -23,6 +23,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { CompletionNotesDialog } from '@/components/completion-notes-dialog'
+import { HabitDetailsDrawer } from '@/components/habit-details-drawer'
 
 type HabitCardProps = {
   habit: HabitWithCompletions
@@ -47,6 +48,7 @@ export function HabitCard({ habit, todayCompleted, onToggle, onEdit, onDelete, o
   const [checkState, setCheckState] = useState<CheckState>(todayCompleted ? 'checked' : 'idle')
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [showNotesDialog, setShowNotesDialog] = useState(false)
+  const [showDetailsDrawer, setShowDetailsDrawer] = useState(false)
   const cardRef: RefObject<HTMLDivElement | null> = useRef<HTMLDivElement>(null)
 
   const completionRate = habit.completionRate
@@ -168,6 +170,10 @@ export function HabitCard({ habit, todayCompleted, onToggle, onEdit, onDelete, o
                   {todayNotes ? 'Edit Note' : 'Add Note'}
                 </DropdownMenuItem>
               )}
+              <DropdownMenuItem onClick={() => setShowDetailsDrawer(true)}>
+                <Flame className="mr-2 h-4 w-4" />
+                View Insights
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => onEdit(habit.id)}>
                 <Pencil className="mr-2 h-4 w-4" />
                 Edit
@@ -189,6 +195,13 @@ export function HabitCard({ habit, todayCompleted, onToggle, onEdit, onDelete, o
           </DropdownMenu>
         </CardContent>
       </Card>
+
+      {/* Habit Details (Drawer) */}
+      <HabitDetailsDrawer 
+        habit={habit} 
+        open={showDetailsDrawer} 
+        onOpenChange={setShowDetailsDrawer} 
+      />
 
       {/* Delete confirmation (AlertDialog) */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
