@@ -36,9 +36,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex h-screen w-full overflow-hidden">
+    <div className="flex h-[100dvh] w-full overflow-hidden">
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex sticky top-0 h-screen w-16 flex-col items-center gap-2 border-r border-border bg-card/50 backdrop-blur-md py-6">
+      <aside className="hidden md:flex sticky top-0 h-[100dvh] w-16 flex-shrink-0 flex-col items-center gap-2 border-r border-border bg-card/50 backdrop-blur-md py-6">
         <Link
           href="/dashboard"
           className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground"
