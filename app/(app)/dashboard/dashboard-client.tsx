@@ -13,6 +13,7 @@ import { isHabitWithCompletions } from '@/lib/types'
 import { HabitCard } from '@/components/habit-card'
 import { HabitChart } from '@/components/habit-chart'
 import { StatsOverview } from '@/components/stats-cards'
+import { ContributionGraph } from '@/components/contribution-graph'
 import { GenericList } from '@/components/generic-list'
 import { Button } from '@/components/ui/button'
 import {
@@ -191,9 +192,17 @@ export function DashboardClient({ habits: initialHabits, completions: initialCom
         weeklyRate={Math.min(weeklyRate, 100)}
       />
 
-      {/* Chart */}
-      <div className="animate-reveal delay-300 opacity-0 animation-fill-forwards">
-        <HabitChart data={chartData} />
+      {/* Heatmap & Chart Stack */}
+      <div className="flex flex-col gap-6">
+        <div className="animate-reveal delay-300 opacity-0 animation-fill-forwards">
+          <ContributionGraph 
+            completions={completions} 
+            habitsCount={habits.length} 
+          />
+        </div>
+        <div className="animate-reveal delay-300 opacity-0 animation-fill-forwards">
+          <HabitChart data={chartData} />
+        </div>
       </div>
 
       {/* Habit list using GenericList */}
