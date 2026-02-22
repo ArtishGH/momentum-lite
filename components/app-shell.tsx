@@ -36,9 +36,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-svh flex-col md:flex-row">
+    <div className="flex h-screen w-full overflow-hidden">
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-16 flex-col items-center gap-2 border-r border-border bg-card/50 backdrop-blur-md py-6">
+      <aside className="hidden md:flex sticky top-0 h-screen w-16 flex-col items-center gap-2 border-r border-border bg-card/50 backdrop-blur-md py-6">
         <Link
           href="/dashboard"
           className="mb-6 flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground"
@@ -96,7 +96,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Main content area */}
-      <main className="flex-1 overflow-auto pb-20 md:pb-0">
+      <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
         <div 
           key={pathname}
           className="container mx-auto max-w-5xl px-4 py-6 md:px-8 md:py-8 animate-fade-in"
