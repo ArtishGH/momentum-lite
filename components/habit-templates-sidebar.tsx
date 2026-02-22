@@ -16,9 +16,9 @@ type HabitTemplatesSidebarProps = {
  */
 export function HabitTemplatesSidebar({ selectedTemplateId, onSelectTemplate }: HabitTemplatesSidebarProps) {
   return (
-    <ScrollArea className="h-[calc(100vh-8rem)] pr-4">
-      <div className="space-y-2">
-        {HABIT_TEMPLATES.map((template) => {
+    <ScrollArea className="h-[calc(100vh-12rem)] pr-4">
+      <div className="space-y-2 pt-4">
+        {HABIT_TEMPLATES.map((template, index) => {
           const IconComponent = getIcon(template.icon)
           const isSelected = selectedTemplateId === template.id
 
@@ -27,10 +27,11 @@ export function HabitTemplatesSidebar({ selectedTemplateId, onSelectTemplate }: 
               key={template.id}
               onClick={() => onSelectTemplate(template)}
               className={cn(
-                'w-full text-left p-3 rounded-lg border transition-all',
-                'hover:border-primary/50 hover:bg-accent/50',
+                'w-full text-left p-3 rounded-lg border transition-all animate-reveal opacity-0 animation-fill-forwards',
+                'hover:border-primary/50 hover:bg-accent/50 hover:-translate-y-1 hover:shadow-sm',
                 'focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2',
-                isSelected && 'border-primary bg-primary/5 ring-2 ring-primary/20'
+                isSelected ? 'border-primary bg-primary/5 ring-2 ring-primary/20' : '',
+                `delay-${(index + 1) * 100 <= 500 ? (index + 1) * 100 : 500}`
               )}
             >
               <div className="flex items-start gap-3">

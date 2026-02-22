@@ -122,8 +122,9 @@
   --color-sidebar-ring: var(--sidebar-ring);
   /* Custom animation for habit check */
   --animate-check-bounce: check-bounce 0.4s ease-out;
-  --animate-fade-in: fade-in 0.3s ease-out;
-  --animate-slide-up: slide-up 0.35s ease-out;
+  --animate-fade-in: fade-in 0.4s ease-out;
+  --animate-reveal: reveal 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --animate-slide-up: slide-up 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --animate-pulse-green: pulse-green 2s ease-in-out infinite;
 }
 
@@ -134,18 +135,35 @@
 }
 
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(4px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes reveal {
+  0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes pulse-green {
   0%, 100% { box-shadow: 0 0 0 0 oklch(0.6 0.18 145 / 0.4); }
   50% { box-shadow: 0 0 0 8px oklch(0.6 0.18 145 / 0); }
+}
+
+@layer utilities {
+  .delay-100 { animation-delay: 100ms; transition-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; transition-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; transition-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; transition-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; transition-delay: 500ms; }
+  
+  .animation-fill-forwards {
+    animation-fill-mode: forwards;
+  }
 }
 
 @layer base {

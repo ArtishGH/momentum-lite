@@ -37,9 +37,7 @@ type HabitFormProps = {
 }
 
 /**
- * HabitForm - Multi-step form (3 steps) using useForm + Zod.
- * Integrates Shadcn UI form components with React Hook Form.
- * Connected to Supabase for saving progress.
+ * HabitForm - Multi-step form for creating and editing habits.
  */
 export function HabitForm({ editHabit, userId }: HabitFormProps) {
   const [currentStep, setCurrentStep] = useState<FormStep>('basics')
@@ -224,7 +222,7 @@ export function HabitForm({ editHabit, userId }: HabitFormProps) {
                   id="title"
                   placeholder="Morning workout"
                   {...register('title')}
-                  className="focus:border-primary"
+                  className="focus:border-primary transition-all focus:scale-[1.01]"
                 />
                 {errors.title && (
                   <p className="text-xs text-destructive">{errors.title.message}</p>
@@ -237,7 +235,7 @@ export function HabitForm({ editHabit, userId }: HabitFormProps) {
                   id="description"
                   placeholder="A brief note about this habit..."
                   {...register('description')}
-                  className="resize-none focus:border-primary"
+                  className="resize-none focus:border-primary transition-all focus:scale-[1.01]"
                   rows={3}
                 />
                 {errors.description && (
@@ -252,7 +250,7 @@ export function HabitForm({ editHabit, userId }: HabitFormProps) {
                   control={control}
                   render={({ field }) => (
                     <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="focus:border-primary">
+                      <SelectTrigger className="focus:border-primary transition-all focus:scale-[1.01]">
                         <SelectValue placeholder="Select a category" />
                       </SelectTrigger>
                       <SelectContent>
@@ -276,90 +274,91 @@ export function HabitForm({ editHabit, userId }: HabitFormProps) {
         {/* Step 2: Details */}
         {currentStep === 'details' && (
           <Card className="animate-slide-up">
-            <CardHeader>
+            <CardHeader className="animate-reveal delay-100 opacity-0 animation-fill-forwards">
               <CardTitle className="text-lg">Details & Customization</CardTitle>
               <CardDescription>Configure your habit tracking details</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-3">
-              <div className="space-y-2">
-                  <Label className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    Frequency
-                  </Label>
+              <div className="space-y-3 animate-reveal delay-200 opacity-0 animation-fill-forwards">
+                <Label className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4" />
+                  Frequency
+                </Label>
                 <Controller
                   name="frequency"
                   control={control}
                   render={({ field }) => (
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            field.onChange('daily')
-                            setValue('target_days', 7)
-                            setValue('custom_days', [])
-                          }}
-                          className={cn(
-                            'flex items-center gap-2 p-4 rounded-lg border-2 transition-all',
-                            'hover:border-primary/50 hover:bg-accent/50 focus:outline-none focus:ring-2 focus:ring-primary/50',
-                            field.value === 'daily'
-                              ? 'border-primary bg-primary/5 shadow-sm'
-                              : 'border-border'
-                          )}
-                        >
-                          <div className={cn(
-                            'h-2 w-2 rounded-full',
-                            field.value === 'daily' ? 'bg-primary' : 'bg-muted-foreground'
-                          )} />
-                          <span className="font-semibold text-sm">Daily</span>
-                        </button>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          field.onChange('daily')
+                          setValue('target_days', 7)
+                          setValue('custom_days', [])
+                        }}
+                        className={cn(
+                          'flex items-center gap-2 p-4 rounded-lg border-2 transition-all',
+                          'hover:border-primary/50 hover:bg-accent/50 focus:outline-none focus:ring-2 focus:ring-primary/50',
+                          'active:scale-95',
+                          field.value === 'daily'
+                            ? 'border-primary bg-primary/5 shadow-sm'
+                            : 'border-border'
+                        )}
+                      >
+                        <div className={cn(
+                          'h-2 w-2 rounded-full',
+                          field.value === 'daily' ? 'bg-primary' : 'bg-muted-foreground'
+                        )} />
+                        <span className="font-semibold text-sm">Daily</span>
+                      </button>
 
-                        <button
-                          type="button"
-                          onClick={() => {
-                            field.onChange('weekly')
-                            setValue('target_days', 7)
-                            setValue('custom_days', [])
-                          }}
-                          className={cn(
-                            'flex items-center gap-2 p-4 rounded-lg border-2 transition-all',
-                            'hover:border-primary/50 hover:bg-accent/50 focus:outline-none focus:ring-2 focus:ring-primary/50',
-                            field.value === 'weekly'
-                              ? 'border-primary bg-primary/5 shadow-sm'
-                              : 'border-border'
-                          )}
-                        >
-                          <div className={cn(
-                            'h-2 w-2 rounded-full',
-                            field.value === 'weekly' ? 'bg-primary' : 'bg-muted-foreground'
-                          )} />
-                          <span className="font-semibold text-sm">Weekly</span>
-                        </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          field.onChange('weekly')
+                          setValue('target_days', 7)
+                          setValue('custom_days', [])
+                        }}
+                        className={cn(
+                          'flex items-center gap-2 p-4 rounded-lg border-2 transition-all',
+                          'hover:border-primary/50 hover:bg-accent/50 focus:outline-none focus:ring-2 focus:ring-primary/50',
+                          'active:scale-95',
+                          field.value === 'weekly'
+                            ? 'border-primary bg-primary/5 shadow-sm'
+                            : 'border-border'
+                        )}
+                      >
+                        <div className={cn(
+                          'h-2 w-2 rounded-full',
+                          field.value === 'weekly' ? 'bg-primary' : 'bg-muted-foreground'
+                        )} />
+                        <span className="font-semibold text-sm">Weekly</span>
+                      </button>
 
-                        <button
-                          type="button"
-                          onClick={() => {
-                            field.onChange('custom')
-                            // Don't auto-select days - let user choose
-                            if (!watchedCustomDays) {
-                              setValue('custom_days', [])
-                            }
-                          }}
-                          className={cn(
-                            'flex items-center gap-2 p-4 rounded-lg border-2 transition-all',
-                            'hover:border-primary/50 hover:bg-accent/50 focus:outline-none focus:ring-2 focus:ring-primary/50',
-                            field.value === 'custom'
-                              ? 'border-primary bg-primary/5 shadow-sm'
-                              : 'border-border'
-                          )}
-                        >
-                          <div className={cn(
-                            'h-2 w-2 rounded-full',
-                            field.value === 'custom' ? 'bg-primary' : 'bg-muted-foreground'
-                          )} />
-                          <span className="font-semibold text-sm">Custom</span>
-                        </button>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          field.onChange('custom')
+                          if (!watchedCustomDays) {
+                            setValue('custom_days', [])
+                          }
+                        }}
+                        className={cn(
+                          'flex items-center gap-2 p-4 rounded-lg border-2 transition-all',
+                          'hover:border-primary/50 hover:bg-accent/50 focus:outline-none focus:ring-2 focus:ring-primary/50',
+                          'active:scale-95',
+                          field.value === 'custom'
+                            ? 'border-primary bg-primary/5 shadow-sm'
+                            : 'border-border'
+                        )}
+                      >
+                        <div className={cn(
+                          'h-2 w-2 rounded-full',
+                          field.value === 'custom' ? 'bg-primary' : 'bg-muted-foreground'
+                        )} />
+                        <span className="font-semibold text-sm">Custom</span>
+                      </button>
+                    </div>
                   )}
                 />
                 {errors.frequency && (
@@ -510,9 +509,8 @@ export function HabitForm({ editHabit, userId }: HabitFormProps) {
                     )}
                   </div>
                 )}
-              </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 animate-reveal delay-300 opacity-0 animation-fill-forwards">
                 <Label>Color</Label>
                 <Controller
                   name="color"
@@ -543,7 +541,7 @@ export function HabitForm({ editHabit, userId }: HabitFormProps) {
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 animate-reveal delay-400 opacity-0 animation-fill-forwards">
                 <Label>Icon</Label>
                 <Controller
                   name="icon"

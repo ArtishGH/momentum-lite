@@ -1,6 +1,5 @@
 /**
  * GenericList - A generic component that renders a list of items.
- * Demonstrates: Generic component with constrained type parameter.
  */
 
 type GenericListProps<T extends { id: string }> = {

@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { Sparkles } from 'lucide-react'
 import { HabitForm } from '@/components/habit-form'
 import { HabitTemplatesSidebar } from '@/components/habit-templates-sidebar'
@@ -45,6 +46,11 @@ export function NewHabitClient({ userId, initialTemplate }: NewHabitClientProps)
     } : null
   )
   const [mobileSheetOpen, setMobileSheetOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleTemplateSelect = (template: HabitTemplate) => {
     setSelectedTemplate(template)
@@ -62,27 +68,28 @@ export function NewHabitClient({ userId, initialTemplate }: NewHabitClientProps)
     target_days: selectedTemplate.target_days,
   } : null
 
-  return (
-    <div className="flex gap-6 animate-fade-in">
-      {/* Desktop Sidebar with Templates */}
-      <aside className="hidden lg:block w-80 shrink-0">
-        <div className="sticky top-6">
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-primary" />
-              Templates
-            </h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              Click a template to fill the form
-            </p>
-          </div>
-          <HabitTemplatesSidebar
-            selectedTemplateId={selectedTemplate?.id}
-            onSelectTemplate={handleTemplateSelect}
-          />
+  const DesktopSidebar = () => (
+    <aside className="hidden lg:block w-80 shrink-0">
+      <div className="fixed right-0 top-0 bottom-0 w-80 border-l border-border bg-card/50 backdrop-blur-xl z-20 pt-20 px-6">
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-primary" />
+            Templates
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Click a template to fill the form
+          </p>
         </div>
-      </aside>
+        <HabitTemplatesSidebar
+          selectedTemplateId={selectedTemplate?.id}
+          onSelectTemplate={handleTemplateSelect}
+        />
+      </div>
+    </aside>
+  )
 
+  return (
+    <div className="flex flex-col lg:flex-row gap-6 animate-fade-in relative min-h-[calc(100vh-8rem)]">
       {/* Main Form Area */}
       <main className="flex-1 min-w-0">
         <div className="mb-6 flex items-start justify-between gap-4">
@@ -103,7 +110,7 @@ export function NewHabitClient({ userId, initialTemplate }: NewHabitClientProps)
                 Templates
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-80 p-6">
+            <SheetContent side="right" className="w-80 p-6">
               <SheetHeader>
                 <SheetTitle className="flex items-center gap-2">
                   <Sparkles className="h-5 w-5 text-primary" />
@@ -127,6 +134,15 @@ export function NewHabitClient({ userId, initialTemplate }: NewHabitClientProps)
           editHabit={templateHabit}
         />
       </main>
+
+      {/* Spacer to keep layout balanced while sidebar is portalled away */}
+      <aside className="hidden lg:block w-80 shrink-0" aria-hidden="true" />
+
+      {/* Portal the actual sidebar to document body to escape parent transforms and centering */}
+      {mounted && typeof document !== 'undefined' && createPortal(
+        <DesktopSidebar />,
+        document.body
+      )}
     </div>
   )
 }

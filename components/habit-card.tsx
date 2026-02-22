@@ -1,17 +1,11 @@
 'use client'
 
 import { useState, useRef, type RefObject } from 'react'
-import { Check, MoreHorizontal, Pencil, Trash2, RotateCcw, FileText, Archive, Flame } from 'lucide-react'
+import { Check, MoreHorizontal, Pencil, Trash2, RotateCcw, FileText, Flame } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getIcon } from '@/lib/icon-utils'
 import type { HabitWithCompletions } from '@/lib/types'
 import { Card, CardContent } from '@/components/ui/card'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,7 +25,6 @@ type HabitCardProps = {
   onToggle: (habitId: string) => void
   onEdit: (habitId: string) => void
   onDelete: (habitId: string) => void
-  onArchive?: (habitId: string) => void
   onSaveNote?: (habitId: string, notes: string) => Promise<void>
 }
 
@@ -43,7 +36,7 @@ type CheckState = 'idle' | 'checking' | 'checked'
  * Interactive animations on check/uncheck with green intensity scaling.
  * Uses group class for hover effects, custom animation on toggle.
  */
-export function HabitCard({ habit, todayCompleted, onToggle, onEdit, onDelete, onArchive, onSaveNote }: HabitCardProps) {
+export function HabitCard({ habit, todayCompleted, onToggle, onEdit, onDelete, onSaveNote }: HabitCardProps) {
   // Typed state and ref
   const [checkState, setCheckState] = useState<CheckState>(todayCompleted ? 'checked' : 'idle')
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
@@ -85,20 +78,20 @@ export function HabitCard({ habit, todayCompleted, onToggle, onEdit, onDelete, o
           getGreenIntensity()
         )}
       >
-        <CardContent className="flex items-center gap-4 p-4">
+        <CardContent className="flex items-center gap-3 py-1.5 px-4">
           {/* Habit Icon */}
           <div 
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
             style={{ backgroundColor: `${habit.color}20`, color: habit.color }}
           >
-            <IconComponent className="h-5 w-5" />
+            <IconComponent className="h-4 w-4" />
           </div>
 
           {/* Check button with animation */}
           <button
             onClick={handleToggle}
             className={cn(
-              'relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border-2 transition-all duration-300',
+              'relative flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border-2 transition-all duration-300',
               'focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background',
               'active:scale-90',
               todayCompleted
@@ -155,44 +148,46 @@ export function HabitCard({ habit, todayCompleted, onToggle, onEdit, onDelete, o
             </span>
           </div>
 
-          {/* Actions dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground opacity-0 transition-all duration-200 hover:bg-muted hover:text-foreground focus:outline-none group-hover:opacity-100">
-                <MoreHorizontal className="h-4 w-4" />
-                <span className="sr-only">Actions for {habit.title}</span>
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              {onSaveNote && (
-                <DropdownMenuItem onClick={() => setShowNotesDialog(true)}>
-                  <FileText className="mr-2 h-4 w-4" />
-                  {todayNotes ? 'Edit Note' : 'Add Note'}
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuItem onClick={() => setShowDetailsDrawer(true)}>
-                <Flame className="mr-2 h-4 w-4" />
-                View Insights
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onEdit(habit.id)}>
-                <Pencil className="mr-2 h-4 w-4" />
-                Edit
-              </DropdownMenuItem>
-              {onArchive && (
-                <DropdownMenuItem onClick={() => onArchive(habit.id)}>
-                  <Archive className="mr-2 h-4 w-4" />
-                  {habit.is_archived ? 'Unarchive' : 'Archive'}
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuItem
-                onClick={() => setShowDeleteDialog(true)}
-                className="text-destructive focus:text-destructive"
+          {/* Direct Actions (Visible on Hover) */}
+          <div className="flex items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+            {onSaveNote && (
+              <button
+                onClick={() => setShowNotesDialog(true)}
+                className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-all hover:bg-muted hover:text-foreground active:scale-95"
+                title={todayNotes ? 'Edit Note' : 'Add Note'}
               >
-                <Trash2 className="mr-2 h-4 w-4" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <FileText className="h-4 w-4" />
+                <span className="sr-only">{todayNotes ? 'Edit Note' : 'Add Note'}</span>
+              </button>
+            )}
+            
+            <button
+              onClick={() => setShowDetailsDrawer(true)}
+              className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-all hover:bg-orange-500/10 hover:text-orange-500 active:scale-95"
+              title="View Insights"
+            >
+              <Flame className="h-4 w-4" />
+              <span className="sr-only">View Insights</span>
+            </button>
+
+            <button
+              onClick={() => onEdit(habit.id)}
+              className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-all hover:bg-muted hover:text-foreground active:scale-95"
+              title="Edit Habit"
+            >
+              <Pencil className="h-4 w-4" />
+              <span className="sr-only">Edit</span>
+            </button>
+
+            <button
+              onClick={() => setShowDeleteDialog(true)}
+              className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-all hover:bg-destructive/10 hover:text-destructive active:scale-95"
+              title="Delete Habit"
+            >
+              <Trash2 className="h-4 w-4" />
+              <span className="sr-only">Delete</span>
+            </button>
+          </div>
         </CardContent>
       </Card>
 

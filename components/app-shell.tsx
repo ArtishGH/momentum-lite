@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Plus, Settings, LogOut, Flame, Archive, History } from 'lucide-react'
+import { LayoutDashboard, Plus, Settings, LogOut, Flame, History } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -17,7 +17,6 @@ const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/dashboard/history', label: 'History', icon: History },
   { href: '/dashboard/new', label: 'Add Habit', icon: Plus },
-  { href: '/dashboard/archived', label: 'Archived', icon: Archive },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 
@@ -65,7 +64,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                           : 'text-muted-foreground'
                       )}
                     >
-                      <item.icon className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
+                      <item.icon className="h-5 w-5" />
                       <span className="sr-only">{item.label}</span>
                     </Link>
                   </TooltipTrigger>
@@ -76,27 +75,32 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               )
             })}
           </nav>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={handleSignOut}
-                className="group flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition-all duration-200 hover:bg-destructive/10 hover:text-destructive focus:outline-none active:scale-95"
-              >
-                <LogOut className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
-                <span className="sr-only">Sign out</span>
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="right" className="text-xs">
-              Sign out
-            </TooltipContent>
-          </Tooltip>
+          <div className="mt-auto flex w-full flex-col items-center gap-2 px-2 pb-2">
+            <div className="h-px w-full bg-border" />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={handleSignOut}
+                  className="group flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition-all duration-200 hover:bg-destructive/10 hover:text-destructive focus:outline-none active:scale-95"
+                >
+                  <LogOut className="h-5 w-5" />
+                  <span className="sr-only">Sign out</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="text-xs">
+                Sign out
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </TooltipProvider>
       </aside>
 
       {/* Main content area */}
       <main className="flex-1 overflow-auto pb-20 md:pb-0">
-        <div className="container mx-auto max-w-5xl px-4 py-6 md:px-8 md:py-8">
+        <div 
+          key={pathname}
+          className="container mx-auto max-w-5xl px-4 py-6 md:px-8 md:py-8 animate-fade-in"
+        >
           {children}
         </div>
       </main>

@@ -36,7 +36,7 @@ export function HabitChart({
   const primaryColorLight = '#22c55e40'
 
   return (
-    <Card className="@container">
+    <Card className="@container animate-reveal opacity-0 animation-fill-forwards">
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold">{title}</CardTitle>
         <CardDescription className="text-xs">{description}</CardDescription>

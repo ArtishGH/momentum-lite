@@ -45,13 +45,13 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm animate-fade-in">
+      <div className="w-full max-w-sm">
         <div className="flex flex-col items-center gap-6">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground animate-reveal">
             <Flame className="h-6 w-6" />
           </div>
 
-          <Card className="w-full backdrop-blur-sm">
+          <Card className="w-full backdrop-blur-sm animate-reveal delay-100 opacity-0 animation-fill-forwards">
             <CardHeader className="text-center">
               <CardTitle className="text-xl">Welcome back</CardTitle>
               <CardDescription>

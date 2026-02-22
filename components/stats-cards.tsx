@@ -51,7 +51,7 @@ type StatsOverviewProps = {
 export function StatsOverview({ totalHabits, completedToday, currentStreak, weeklyRate }: StatsOverviewProps) {
   return (
     <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-      <StatCard.Root>
+      <StatCard.Root className="animate-reveal opacity-0 animation-fill-forwards">
         <StatCard.Icon>
           <Target className="h-5 w-5" />
         </StatCard.Icon>
@@ -61,7 +61,7 @@ export function StatsOverview({ totalHabits, completedToday, currentStreak, week
         </div>
       </StatCard.Root>
 
-      <StatCard.Root>
+      <StatCard.Root className="animate-reveal delay-100 opacity-0 animation-fill-forwards">
         <StatCard.Icon>
           <CheckCircle2 className="h-5 w-5" />
         </StatCard.Icon>
@@ -71,7 +71,7 @@ export function StatsOverview({ totalHabits, completedToday, currentStreak, week
         </div>
       </StatCard.Root>
 
-      <StatCard.Root>
+      <StatCard.Root className="animate-reveal delay-200 opacity-0 animation-fill-forwards">
         <StatCard.Icon>
           <Flame className="h-5 w-5" />
         </StatCard.Icon>
@@ -81,7 +81,7 @@ export function StatsOverview({ totalHabits, completedToday, currentStreak, week
         </div>
       </StatCard.Root>
 
-      <StatCard.Root>
+      <StatCard.Root className="animate-reveal delay-300 opacity-0 animation-fill-forwards">
         <StatCard.Icon>
           <TrendingUp className="h-5 w-5" />
         </StatCard.Icon>

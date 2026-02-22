@@ -157,7 +157,7 @@ export function DashboardClient({ habits: initialHabits, completions: initialCom
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between animate-reveal">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-balance">Dashboard</h1>
           <p className="mt-1 text-sm text-muted-foreground font-mono">
@@ -166,7 +166,7 @@ export function DashboardClient({ habits: initialHabits, completions: initialCom
         </div>
         <Popover>
           <PopoverTrigger asChild>
-            <Button size="sm" className="gap-2">
+            <Button size="sm" className="gap-2 active:scale-95">
               <Plus className="h-4 w-4" />
               <span className="hidden sm:inline">New Habit</span>
             </Button>
@@ -174,7 +174,7 @@ export function DashboardClient({ habits: initialHabits, completions: initialCom
           <PopoverContent className="w-56 p-3" align="end">
             <p className="mb-2 text-xs font-medium text-muted-foreground">Quick add or use full form</p>
             <Link href="/dashboard/new">
-              <Button size="sm" className="w-full gap-2">
+              <Button size="sm" className="w-full gap-2 active:scale-95">
                 <Plus className="h-4 w-4" />
                 Create New Habit
               </Button>
@@ -192,10 +192,12 @@ export function DashboardClient({ habits: initialHabits, completions: initialCom
       />
 
       {/* Chart */}
-      <HabitChart data={chartData} />
+      <div className="animate-reveal delay-300 opacity-0 animation-fill-forwards">
+        <HabitChart data={chartData} />
+      </div>
 
       {/* Habit list using GenericList */}
-      <div>
+      <div className="animate-reveal delay-400 opacity-0 animation-fill-forwards">
         <h2 className="mb-3 text-base font-semibold">Today&apos;s Habits</h2>
         <GenericList<HabitWithCompletions>
           items={habitsWithCompletions}
@@ -211,6 +213,22 @@ export function DashboardClient({ habits: initialHabits, completions: initialCom
             />
           )}
         />
+        {habits.length === 0 && (
+          <div className="mt-4 rounded-xl border border-dashed p-10 text-center">
+            <h3 className="text-lg font-semibold">Ready to start?</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Choose a template to get moving instantly, or build your own custom habit.
+            </p>
+            <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link href="/dashboard/new">
+                <Button className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Explore Templates
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
